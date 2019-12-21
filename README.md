@@ -18,6 +18,6 @@ Initial goal is create model with manually downloaded dataset, later will be ful
 an interpurtation should also be completed as investegation on how effective particular factor is good for at predicting the target respond.
 Data transformation will be apply is needed.
 
-some resource: 	API for data collection: https://rapidapi.com/blog/google-finance-api-alternatives/
+some resource: 	API for data collection: python yfinance package<br/>
 	       	Saving trained model: python pickle
 		Python naming convention:https://visualgit.readthedocs.io/en/latest/pages/naming_convention.html
