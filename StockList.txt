@@ -1,0 +1,5 @@
+start day = 2018-12-1
+end day = 2019-12-20
+Google = GOOGL
+Microsoft = MSFT
+Apple = AAPL
