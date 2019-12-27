@@ -69,3 +69,10 @@ class DataCollection:
         loc = 'Dataset/' + targetFileName
         #path might be differnt from computer to computer, so we will use OS path to get the right path on each device
         data.to_csv(path_or_buf  = os.path.join(os.path.dirname(os.path.realpath(__file__)),loc))
+        
+class DataFormat:
+    def formatYahooData(df):
+        
+        
+        
+        return df
