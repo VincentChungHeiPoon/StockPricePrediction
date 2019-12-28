@@ -41,15 +41,19 @@ for i in range(len(new_col_name)):
         if(current_col == next_col):
             count = count + 1
         else:
-            print(count)
             a.append(RepeatedCol(current_col, count))
             count = 1
     else:
         next_col = new_col_name[i - 1].split('.')[0]
         if(current_col == next_col):
-            count = count + 1
             a.append(RepeatedCol(current_col, count))
-            count = 1
         else:
             a.append(RepeatedCol(current_col, 1))
-            
+
+count = 0           
+for item in a:
+    print(item.name)
+    for i in range(item.count - 1):
+        print()
+        #temp[] = temp[item.name].append(temp[new_col_name[count + i + 1]])
+    count = count + item.count
