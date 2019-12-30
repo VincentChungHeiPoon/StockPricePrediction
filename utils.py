@@ -7,14 +7,17 @@ Created on Thu Dec 19 22:13:39 2019
 import yfinance as yf
 import pandas as pd
 import os
-import re
 
 class SymbolNamePair:
     
     def __init__(self, symbol, name):
         self.symbol = symbol
         self.name = name
-        
+
+class RepeatedCol:
+    def __init__(self, name, count):
+        self.name = name
+        self.count = count        
 
 class DataCollection:
     #list of stock that will be collected
@@ -71,8 +74,41 @@ class DataCollection:
         data.to_csv(path_or_buf  = os.path.join(os.path.dirname(os.path.realpath(__file__)),loc))
         
 class DataFormat:
-    def formatYahooData(df):
+    #function that returns a formatted version of the Yahoo data for easy process
+    def format_yahoo_data(df):        
+        #dropping date row (mostly nan)
+        df.drop(1, axis = 0, inplace = True)
+        #set Data as a column name istead of in the dropped row
+        new_col_name = df.columns.values
+        new_col_name[0] = 'Date'
         
+        df.columns = new_col_name
         
+        #row 0 contains all company name
+        company_list = pd.Series(list(dict.fromkeys(df.iloc[0])))
+        #drop na as the first one is data, company name nan
+        company_list.dropna(inplace = True)
         
-        return df
+        new_df = pd.DataFrame()
+        date_df = pd.Series()
+        df.drop(0, axis = 0, inplace = True)
+        for i in range(len(company_list)):
+            date_df = date_df.append(df['Date'])
+        new_df['Date'] = list(date_df)
+        
+        #appending company name       
+        comp_df = pd.Series()
+        for i in range(len(company_list)):
+            comp_df = comp_df.append(pd.Series([company_list.iloc[i]] * len(df)))
+        new_df['Company'] = list(comp_df)
+        
+        df.drop('Date', axis = 1, inplace = True)
+        
+        #appending the 6 featues
+        for i in range(0, len(df.columns),len(company_list)):
+            feat_df = pd.Series()
+            for j in range(len(company_list)):
+                feat_df = feat_df.append(df[df.columns[i + j]])
+            new_df[df.columns[i]] = list(feat_df)
+        
+        return new_df
