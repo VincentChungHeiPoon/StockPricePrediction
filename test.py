@@ -15,5 +15,11 @@ import re
 
 #temp = DataFormat.formatYahooData(DataCollection.get_stock_data())
 
-df = DataFormat.format_yahoo_data(pd.read_csv('Dataset/data.csv'))
+#DataCollection.save_data_as_csv()
+a = DataCollection.get_stock_name('StockList.txt')
+
+for item in a:
+    print(item.name)
+    print(item.symbol)
+#df = DataFormat.format_yahoo_data(pd.read_csv('Dataset/data.csv'))
 
