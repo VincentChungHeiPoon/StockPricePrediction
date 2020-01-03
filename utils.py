@@ -112,3 +112,16 @@ class DataFormat:
             new_df[df.columns[i]] = list(feat_df)
         
         return new_df
+    
+    #returns a data frame that contains features and target, can be set as how many days in the future
+    #currently not working
+    def get_train_test_set(df, targetColumn, daysInAdvance):
+        #we will shift the column forward by daysInAdvance days, result df should be total case - daysInAdvance
+        target = df[targetColumn]
+        target = target.iloc[daysInAdvance:]
+        
+        df = df.iloc[:len(df) - daysInAdvance, :]
+        df[targetColumn] = target.values
+        df.reset_index()
+        
+        return df
