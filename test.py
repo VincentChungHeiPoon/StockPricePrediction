@@ -20,5 +20,10 @@ import re
 
 df = DataFormat.format_yahoo_data(pd.read_csv('Dataset/data.csv'))
 
+#df_index = df[(df['Company'] == 'AAPL') & (df['Date'] == '2017-12-01')]
 
-df_shifted = DataFormat.get_train_test_set(df, 'Close', 3)
+df_tem = df.loc['AAPL']
+
+
+df_tem = DataFormat.get_train_test_set(df, 'Date', 3)
+#df_shifted = DataFormat.get_train_test_set(df, 'Close', 3)

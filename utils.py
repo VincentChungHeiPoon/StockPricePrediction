@@ -85,6 +85,7 @@ class DataFormat:
         df.columns = new_col_name
         
         #row 0 contains all company name
+        #getting unique company names
         company_list = pd.Series(list(dict.fromkeys(df.iloc[0])))
         #drop na as the first one is data, company name nan
         company_list.dropna(inplace = True)
@@ -110,18 +111,20 @@ class DataFormat:
             for j in range(len(company_list)):
                 feat_df = feat_df.append(df[df.columns[i + j]])
             new_df[df.columns[i]] = list(feat_df)
-        
+        new_df = new_df.set_index(['Company'])
         return new_df
     
     #returns a data frame that contains features and target, can be set as how many days in the future
-    #currently not working
-    def get_train_test_set(df, targetColumn, daysInAdvance):
-        #we will shift the column forward by daysInAdvance days, result df should be total case - daysInAdvance
-        target = df[targetColumn]
-        target = target.iloc[daysInAdvance:]
-        
-        df = df.iloc[:len(df) - daysInAdvance, :]
-        df[targetColumn] = target.values
-        df.reset_index()
-        
+    #new column name in format #days Days of column Advance
+    def get_train_test_set_for_one_company(df, targetColumn, daysInAdvance = 3):
+        #we will shift value up by removing top value from the target_column, reindex
+        #delete last rows in the prigional data frame, as they will not have advance to pair with
+        new_col_name = str(daysInAdvance) + ' Days of ' + targetColumn + ' Advance'        
+        target_column = df[targetColumn]        
+        target_column = target_column[daysInAdvance:].reset_index()
+        df = df.iloc[:len(df) - daysInAdvance].reset_index()
+        df[new_col_name] = list(target_column[targetColumn])
         return df
+    
+    def get_train_test_set_for_all_company(df, targetColumn, daysInAdvance = 3):
+        
