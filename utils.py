@@ -116,7 +116,7 @@ class DataFormat:
     
     #returns a data frame that contains features and target, can be set as how many days in the future
     #new column name in format #days Days of column Advance
-    def get_train_test_set_for_one_company(df, targetColumn, daysInAdvance = 3):
+    def __get_target_for_one_company(df, targetColumn, daysInAdvance = 3):
         #we will shift value up by removing top value from the target_column, reindex
         #delete last rows in the prigional data frame, as they will not have advance to pair with
         new_col_name = str(daysInAdvance) + ' Days of ' + targetColumn + ' Advance'        
@@ -124,7 +124,15 @@ class DataFormat:
         target_column = target_column[daysInAdvance:].reset_index()
         df = df.iloc[:len(df) - daysInAdvance].reset_index()
         df[new_col_name] = list(target_column[targetColumn])
+        df = df.set_index(['Company'])
         return df
     
-    def get_train_test_set_for_all_company(df, targetColumn, daysInAdvance = 3):
+    def get_target_for_all_company(df, targetColumn, daysInAdvance = 3):
+        company_list = list(dict.fromkeys(df.index.values))
+        final_df = pd.DataFrame()
         
+        for company in company_list:
+            next_comp_df = DataFormat.__get_target_for_one_company(df.loc[company], targetColumn, daysInAdvance)
+            final_df = pd.concat([final_df, next_comp_df])
+            
+        return final_df
